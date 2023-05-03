@@ -1,17 +1,13 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using DatingAppAPI.Data;
 using DatingAppAPI.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace DatingAppAPI.Controllers
 {
-    [ApiController]
-    [Route("api/[controller]")] // /api/users
-    public class UsersController: ControllerBase
+    [Authorize] // Can be added at Method Level
+    public class UsersController: BaseAPIController // Will inherit Attributes from BaseAPIController i.e., Route will be /api/Users
     {
         private readonly DataContext _context;
 
@@ -20,6 +16,7 @@ namespace DatingAppAPI.Controllers
             this._context = context;
         }
 
+        //[AllowAnonymous] // If you don't want the endpoint to be authenticated.
         [HttpGet]
         public async Task<ActionResult<IEnumerable<AppUser>>> GetUsers() {
             return await this._context.Users.ToListAsync();
