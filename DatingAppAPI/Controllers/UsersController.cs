@@ -16,7 +16,7 @@ namespace DatingAppAPI.Controllers
             this._context = context;
         }
 
-        //[AllowAnonymous] // If you don't want the endpoint to be authenticated.
+        [AllowAnonymous] // If you don't want the endpoint to be authenticated.
         [HttpGet]
         public async Task<ActionResult<IEnumerable<AppUser>>> GetUsers() {
             return await this._context.Users.ToListAsync();
