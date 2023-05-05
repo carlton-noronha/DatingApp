@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { AccountService } from './_services/account.service';
 import { User } from './models/user';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-root',
@@ -11,7 +12,7 @@ import { User } from './models/user';
 export class AppComponent implements OnInit {
   title = 'Dating App';
 
-  constructor(private httpClient: HttpClient, private accountService: AccountService) {}
+  constructor(private httpClient: HttpClient, private accountService: AccountService, private router: Router, private route: ActivatedRoute) {}
 
   ngOnInit(): void {
     this.setCurrentUser();
@@ -23,5 +24,7 @@ export class AppComponent implements OnInit {
       return;
     }
     this.accountService.setCurrentUser(user);
+    console.log(this.route);
+    //this.router.navigateByUrl('/members');
   }
 }
