@@ -1,6 +1,7 @@
 using System.Text;
 using DatingAppAPI.Data;
 using DatingAppAPI.Extentions;
+using DatingAppAPI.Middlewares;
 using DatingAppAPI.Services;
 using DatingAppAPI.Services.Implementations;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -17,7 +18,7 @@ builder.Services.AddIdentityServices(builder.Configuration);
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-
+app.UseMiddleware<ExceptionMiddleware>();
 app.UseCors(corsBuilder => corsBuilder.AllowAnyHeader().AllowAnyMethod().WithOrigins("https://localhost:4200"));
 
 app.UseAuthentication(); // Do you have a valid token?

@@ -27,8 +27,7 @@ export class NavComponent implements OnInit, OnDestroy {
     this.accountService.login(this.loginForm.value).subscribe({
       next: () => {
         this.router.navigate(['/members']);
-      },
-      error: (error: HttpErrorResponse) => this.toastr.error(error.error)
+      }
     });
   }
 
