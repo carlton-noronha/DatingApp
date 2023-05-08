@@ -108,7 +108,7 @@
         "Country": "Belize",
         "Photos": [
             {
-                "url": "https://randomuser.me/api/portraits/mem/98.jpg",
+                "url": "https://randomuser.me/api/portraits/men/98.jpg",
                 "isMain": true
             }
         ]
@@ -127,7 +127,7 @@
         "Country": "Swaziland",
         "Photos": [
             {
-                "url": "https://randomuser.me/api/portraits/mem/80.jpg",
+                "url": "https://randomuser.me/api/portraits/men/80.jpg",
                 "isMain": true
             }
         ]
@@ -146,7 +146,7 @@
         "Country": "S. Georgia and S. Sandwich Isls.",
         "Photos": [
             {
-                "url": "https://randomuser.me/api/portraits/mem/54.jpg",
+                "url": "https://randomuser.me/api/portraits/men/54.jpg",
                 "isMain": true
             }
         ]
@@ -165,7 +165,7 @@
         "Country": "Argentina",
         "Photos": [
             {
-                "url": "https://randomuser.me/api/portraits/mem/34.jpg",
+                "url": "https://randomuser.me/api/portraits/men/34.jpg",
                 "isMain": true
             }
         ]
@@ -184,7 +184,7 @@
         "Country": "US Minor Outlying Islands",
         "Photos": [
             {
-                "url": "https://randomuser.me/api/portraits/mem/22.jpg",
+                "url": "https://randomuser.me/api/portraits/men/22.jpg",
                 "isMain": true
             }
         ]
