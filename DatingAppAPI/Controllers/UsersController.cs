@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using AutoMapper;
 using DatingAppAPI.Data;
 using DatingAppAPI.DTOs;
@@ -33,6 +34,23 @@ namespace DatingAppAPI.Controllers
         [HttpGet("{username}")]
         public async Task<ActionResult<MemberDTO>> GetUser(string username) {
             return await this._userRepository.GetMemberByUserNameAsync(username);
+        }
+
+        [HttpPut]
+        public async Task<ActionResult> UpdateUser(MemberUpdateDTO memberUpdateDTO) {
+            string username = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            AppUser user = await this._userRepository.GetUserByUserNameAsync(username);
+            if(user == null) {
+                return NotFound();
+            }
+
+            this._mapper.Map(memberUpdateDTO, user);
+
+            if(await this._userRepository.SaveAllAsync()) {
+                return NoContent();
+            }
+
+            return BadRequest("Failed to updated user");
         }
     }
 }
