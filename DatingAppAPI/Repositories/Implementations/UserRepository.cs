@@ -48,7 +48,7 @@ namespace DatingAppAPI.Repositories.Implementations
             return await this._dataContext.SaveChangesAsync() > 0;
         }
 
-        public async void Update(AppUser user)
+        public void Update(AppUser user)
         {
             this._dataContext.Entry(user).State = EntityState.Modified;
         }

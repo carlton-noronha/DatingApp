@@ -22,6 +22,8 @@ namespace DatingAppAPI.Extentions
             services.AddAutoMapper(config => {
                 config.AddProfile(new AutoMapperProfiles());
             });
+            services.Configure<CloudinarySettings>(configuration.GetSection("CloudinarySettings"));
+            services.AddScoped<IPhotoService, PhotoService>();
             return services;
         }
     }

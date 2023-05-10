@@ -40,7 +40,7 @@ namespace DatingAppAPI.Controllers
 
         [HttpPost("login")]
         public async Task<ActionResult<UserDTO>> Login(LoginDTO credentials) {
-            AppUser user = await this._context.Users.FirstOrDefaultAsync(user => user.UserName == credentials.Username.ToLower());
+            AppUser user = await this._context.Users.Include(user => user.Photos).FirstOrDefaultAsync(user => user.UserName == credentials.Username.ToLower());
             if (user == null) {
                 return Unauthorized("Invalid Username!");
             }
@@ -57,7 +57,8 @@ namespace DatingAppAPI.Controllers
         private UserDTO  GenerateAuthTokenResponse(AppUser user) {
             return new UserDTO {
                 UserName = user.UserName,
-                Token = this._tokenService.CreateToken(user)
+                Token = this._tokenService.CreateToken(user),
+                PhotoUrl = user.Photos.FirstOrDefault(photo => photo.IsMain)?.Url
             };
         }
     }

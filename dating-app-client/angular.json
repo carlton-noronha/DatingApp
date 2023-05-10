@@ -113,5 +113,8 @@
       }
     }
   },
-  "defaultProject": "dating-app-client"
+  "defaultProject": "dating-app-client",
+  "cli": {
+    "analytics": false
+  }
 }
