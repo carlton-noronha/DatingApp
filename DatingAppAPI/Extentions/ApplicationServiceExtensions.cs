@@ -19,6 +19,7 @@ namespace DatingAppAPI.Extentions
             services.AddCors();
             services.AddScoped<ITokenService, TokenService>();
             services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<LogUserActivity>();
             services.AddAutoMapper(config => {
                 config.AddProfile(new AutoMapperProfiles());
             });

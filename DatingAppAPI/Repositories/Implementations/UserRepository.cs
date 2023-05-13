@@ -3,6 +3,7 @@ using AutoMapper.QueryableExtensions;
 using DatingAppAPI.Data;
 using DatingAppAPI.DTOs;
 using DatingAppAPI.Entities;
+using DatingAppAPI.Helpers;
 using Microsoft.EntityFrameworkCore;
 
 namespace DatingAppAPI.Repositories.Implementations
@@ -23,9 +24,30 @@ namespace DatingAppAPI.Repositories.Implementations
             .ProjectTo<MemberDTO>(this._mapper.ConfigurationProvider).FirstOrDefaultAsync();
         }
 
-        public async Task<IEnumerable<MemberDTO>> GetMembersAsync()
+        public async Task<PagedList<MemberDTO>> GetMembersAsync(UserParams userParams)
         {
-            return await this._dataContext.Users.ProjectTo<MemberDTO>(this._mapper.ConfigurationProvider).ToListAsync();
+            IQueryable<AppUser> query = this._dataContext.Users.AsQueryable();
+
+            query = query.Where(user => user.UserName != userParams.CurrentUsername);
+            query = query.Where(user => user.Gender == userParams.Gender);
+
+            DateOnly minDOB = DateOnly.FromDateTime(DateTime.Today.AddYears(-userParams.MaxAge - 1));
+            DateOnly maxDOB = DateOnly.FromDateTime(DateTime.Today.AddYears(-userParams.MinAge));
+
+            query = query.Where(user => user.DateOfBirth >= minDOB && user.DateOfBirth <= maxDOB);
+
+            switch (userParams.OrderBy)
+            {
+                case "created":
+                    query = query.OrderByDescending(user => user.Created);
+                    break;
+                default:
+                    query = query.OrderByDescending(user => user.LastActive);
+                    break;
+            }
+
+            return await PagedList<MemberDTO>.CreateAsync(query.ProjectTo<MemberDTO>(this._mapper.ConfigurationProvider)
+             .AsNoTracking(), userParams.PageNumber, userParams.PageSize);
         }
 
         public async Task<AppUser> GetUserByIdAsync(int id)

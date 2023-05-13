@@ -18,7 +18,8 @@ namespace DatingAppAPI.Services.Implementations
         public string CreateToken(AppUser user)
         {
             List<Claim> claims = new List<Claim> {
-                new Claim(System.IdentityModel.Tokens.Jwt.JwtRegisteredClaimNames.NameId, user.UserName)
+                new Claim(System.IdentityModel.Tokens.Jwt.JwtRegisteredClaimNames.NameId, user.Id.ToString()),
+                new Claim(System.IdentityModel.Tokens.Jwt.JwtRegisteredClaimNames.UniqueName, user.UserName),
             };
 
             SigningCredentials signingCredentails= new SigningCredentials(_key, SecurityAlgorithms.HmacSha512Signature);

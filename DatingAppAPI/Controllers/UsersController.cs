@@ -3,6 +3,7 @@ using CloudinaryDotNet.Actions;
 using DatingAppAPI.DTOs;
 using DatingAppAPI.Entities;
 using DatingAppAPI.Extentions;
+using DatingAppAPI.Helpers;
 using DatingAppAPI.Repositories;
 using DatingAppAPI.Services;
 using Microsoft.AspNetCore.Authorization;
@@ -28,9 +29,17 @@ namespace DatingAppAPI.Controllers
 
         //[AllowAnonymous] // If you don't want the endpoint to be authenticated.
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<MemberDTO>>> GetUsers()
+        public async Task<ActionResult<PagedList<MemberDTO>>> GetUsers([FromQuery] UserParams userParams)
         {
-            return Ok(await this._userRepository.GetMembersAsync());
+            AppUser user = await this._userRepository.GetUserByUserNameAsync(User.GetUsername());
+            userParams.CurrentUsername = user.UserName;
+            if (string.IsNullOrEmpty(userParams.Gender))
+            {
+                userParams.Gender = user.Gender == "male" ? "female" : "male";
+            }
+            PagedList<MemberDTO> users = await this._userRepository.GetMembersAsync(userParams);
+            HttpContext.Response.AddPaginationHeader(new PaginationHeader(users.CurrentPage, users.PageSize, users.TotalCount, users.TotalPages));
+            return Ok(users);
         }
 
         [HttpGet("{username}")]
@@ -151,7 +160,8 @@ namespace DatingAppAPI.Controllers
             if (photo.PublicId != null)
             {
                 DeletionResult result = await this._photoService.DeletePhotoAsync(photo.PublicId);
-                if(result.Error != null) {
+                if (result.Error != null)
+                {
                     return BadRequest(result.Error.Message);
                 }
             }
