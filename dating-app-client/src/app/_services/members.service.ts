@@ -21,7 +21,10 @@ export class MembersService {
   cachedKeys: string[] = [];
   private CACHE_SIZE = 5;
 
-  constructor(private httpClient: HttpClient, private accountService: AccountService) {
+  constructor(
+    private httpClient: HttpClient,
+    private accountService: AccountService
+  ) {
     this.accountService.currentUser$.pipe(take(1)).subscribe({
       next: (user: User | null) => {
         if (user) {
@@ -41,7 +44,7 @@ export class MembersService {
   }
 
   resetUserParams() {
-    if(this.user) {
+    if (this.user) {
       this.userParams = new UserParams(this.user);
     }
   }
@@ -88,6 +91,21 @@ export class MembersService {
       );
   }
 
+  addLike(username: string) {
+    return this.httpClient.post(`${this.baseUrl}likes/${username}`, {});
+  }
+
+  getLikes(predicate: string, pageNumber: number, pageSize: number) {
+    return this.getPaginatedResults<Member[]>(
+      `${this.baseUrl}likes`,
+      new HttpParams().appendAll({
+        predicate: predicate,
+        pageNumber,
+        pageSize,
+      })
+    );
+  }
+
   private getQueryParams(userParams: UserParams) {
     let params = new HttpParams();
     params = params.append('pageNumber', userParams.pageNumber);
@@ -100,17 +118,16 @@ export class MembersService {
   }
 
   getMember(username: string) {
-    const member = [...this.memberCache.values()].reduce<Member[]>(
-      (members, paginatedResult) => {
+    const member = [...this.memberCache.values()]
+      .reduce<Member[]>((members, paginatedResult) => {
         if (paginatedResult?.result) {
-          console.log(paginatedResult)
+          console.log(paginatedResult);
           members = members.concat(paginatedResult.result);
         }
         return members;
-      },
-      []
-    ).find(member => member.userName == username);
-    if(member) {
+      }, [])
+      .find((member) => member.userName == username);
+    if (member) {
       return of(member);
     }
     return this.httpClient.get<Member>(`${this.baseUrl}users/${username}`);
